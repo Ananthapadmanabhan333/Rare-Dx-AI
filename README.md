@@ -60,3 +60,6 @@ To evolve this into a production system, you will need to:
 1.  Integrate real ETL pipelines for Orphanet, OMIM, PubMed, and HPO.
 2.  Add OpenAI / LLM API Keys to power the LangChain agents.
 3.  Deploy the Dockerized stack to a Kubernetes cluster.
+
+Built by Ananthapadmanabhan 
+
