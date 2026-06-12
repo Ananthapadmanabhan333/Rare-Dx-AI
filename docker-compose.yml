@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Graph Database
+  neo4j:
+    image: neo4j:5.18.0
+    container_name: raredx-neo4j
+    ports:
+      - "7474:7474" # HTTP
+      - "7687:7687" # Bolt
+    environment:
+      - NEO4J_AUTH=neo4j/raredx_password
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+    volumes:
+      - neo4j_data:/data
+    restart: unless-stopped
+
+  # Vector Database
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: raredx-qdrant
+    ports:
+      - "6333:6333" # REST API
+      - "6334:6334" # gRPC
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+  # Relational Database
+  postgres:
+    image: postgres:15
+    container_name: raredx-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=raredx
+      - POSTGRES_PASSWORD=raredx_password
+      - POSTGRES_DB=raredx_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # Cache
+  redis:
+    image: redis:7
+    container_name: raredx-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+volumes:
+  neo4j_data:
+  qdrant_data:
+  postgres_data:
